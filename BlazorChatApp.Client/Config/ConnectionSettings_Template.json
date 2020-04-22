@@ -1,0 +1,8 @@
+{
+  "Title": "Blazor Chat App",
+  "API_Base_URL": "https://{yourwebsite}.azurewebsites.net",
+  "API_Host_Key": "{HostKey}",
+  "API_URL_PART_GetMessages": "/api/GetMessages",
+  "API_URL_PART_SendMessages": "/api/SendMessage",
+  "API_URL_SignalR_Negotiation": "https://{yourwebsite}.azurewebsites.net/api"
+}
