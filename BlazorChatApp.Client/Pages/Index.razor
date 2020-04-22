@@ -1,0 +1,58 @@
+﻿@page "/"
+@using BlazorChatApp.Models
+@using BlazorChatApp.Services
+@inject ChatService Service
+
+<h1>Hello, @(_loggedIn ? _sourceUser.UserName : "please sign in")!</h1>
+
+Welcome to your Blazor chat app.
+
+   
+@if(!_loggedIn) {
+<h3>Login:</h3>
+<EditForm Model="@_sourceUser" OnSubmit="@HandleUserSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="user-name" @bind-Value="_sourceUser.UserName" />
+
+    <button type="submit">Login</button>
+</EditForm>
+} else {
+<h3>Chat with user:</h3>
+<EditForm Model="@_newTargetUser" OnSubmit=@HandleTargetSubmit>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="user-name" @bind-Value="_newTargetUser.UserName" />
+
+    <button type="submit">Create</button>
+</EditForm>
+}
+
+
+@code {
+    private User _sourceUser = new User();
+    private User _newTargetUser = new User();
+    private bool _loggedIn = false;
+
+    protected override void OnInitialized() {
+        if(Service.User != null) {
+            _sourceUser = Service.User;
+            _loggedIn = true;
+        }
+    }
+
+    private async Task HandleUserSubmit() 
+    {
+        if(!string.IsNullOrWhiteSpace(_sourceUser.UserName)) {
+            _loggedIn = true;
+            await Service.SignInUser(_sourceUser);
+        }
+    }
+
+    private void HandleTargetSubmit() {
+        Service.AddTargetUser(_newTargetUser.UserName);
+        _newTargetUser = new User();   
+    }
+}

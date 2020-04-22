@@ -1,0 +1,50 @@
+﻿@page "/chat/{UserName}"
+@using BlazorChatApp.Services
+@inject ChatService Service
+@implements IDisposable
+
+<h1>Chat with @UserName</h1>
+
+@foreach(var message in Service.GetMessages(UserName)) 
+{
+    var directionClass = message.TargetUserName == UserName ? "send" : "received";
+    
+    <div class="chat-message @(directionClass)">
+        <span class="datetime">@message.DateTime.ToString()</span>
+        <p class="message-content">@message.Content</p>
+    </div>
+}
+
+<input placeholder="Message" @bind="CurrentMessage" />
+<button class="btn btn-primary" @onclick="SendMessage">Send</button>
+
+@code {
+    [Parameter]
+    public string UserName {get;set;} = "";
+
+    private string CurrentMessage {get;set;}
+
+    protected override void OnInitialized() 
+    {   
+        Service.NewMessage += HandleNewMessage;
+    }
+
+    void IDisposable.Dispose()
+    {
+        Service.NewMessage -= HandleNewMessage;
+    }    
+
+    private async Task SendMessage() {
+        if(!string.IsNullOrWhiteSpace(CurrentMessage)) {
+            await Service.SendMessage(UserName, CurrentMessage);
+            CurrentMessage = "";
+        }
+    }
+
+    private void HandleNewMessage(string user) {
+        if(user == UserName) 
+        {
+            StateHasChanged();
+        }
+    }
+}

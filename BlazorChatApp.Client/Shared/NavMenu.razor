@@ -1,0 +1,65 @@
+﻿@using BlazorChatApp.Services
+@inject ChatService Service
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">@Configuration["Title"]</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-plus" aria-hidden="true"></span> Add User
+            </NavLink>
+        </li>
+
+        @if (Service.User != null)
+        {
+            <li class="nav-item px-3">
+                <button class="nav-link" @onclick="LogOut">
+                    Log Out
+                </button>
+            </li>
+        }
+
+        @foreach (var userName in Service.TargetUsers)
+        {
+            var href = $"/chat/{userName}";
+            <NavLink class="nav-link" href="@href" Match="NavLinkMatch.All">
+                <span aria-hidden="true"></span> @userName
+            </NavLink>
+        }
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        Service.UsersChanged += Refresh;
+    }
+
+    void IDisposable.Dispose()
+    {
+        Service.UsersChanged -= Refresh;
+    }
+
+    private void Refresh() => StateHasChanged();
+
+    private async Task LogOut(MouseEventArgs args)
+    {
+        await Service.SignOutUser();
+        Navigation.NavigateTo(Navigation.BaseUri);
+    }
+}
