@@ -1,8 +1,0 @@
-{
-  "Title": "Blazor Chat App",
-  "API_Base_URL": "https://blazorchatapi.azurewebsites.net",
-  "API_Host_Key": "M/eUzDF/fDmMMgugjl/kCDJGbohmqmGH/3ZEJnYaCrjTysjUImviYA==",
-  "API_URL_PART_GetMessages": "/api/GetMessages",
-  "API_URL_PART_SendMessages": "/api/SendMessage",
-  "API_URL_SignalR_Negotiation": "https://blazorchatapi.azurewebsites.net/api"
-}
