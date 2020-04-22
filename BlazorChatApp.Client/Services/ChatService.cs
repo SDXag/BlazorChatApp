@@ -34,7 +34,7 @@ namespace BlazorChatApp.Services
         {
             Configuration = configuration;
             Http = client;
-            Http.BaseAddress = new System.Uri(Configuration["API_Base_URL"]);
+            Http.BaseAddress = new Uri(Configuration["API_Base_URL"]);
             Http.DefaultRequestHeaders.Add("x-functions-key", Configuration["API_Host_Key"]);
 
             _hubConnection = new HubConnectionBuilder()
@@ -76,8 +76,6 @@ namespace BlazorChatApp.Services
 
                     UsersChanged?.Invoke();
                 }
-
-
             }
         }
 
