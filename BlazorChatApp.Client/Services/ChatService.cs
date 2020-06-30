@@ -38,7 +38,7 @@ namespace BlazorChatApp.Services
             Http.DefaultRequestHeaders.Add("x-functions-key", Configuration["API_Host_Key"]);
 
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl(Configuration["API_URL_SignalR_Negotiation"])//, o => o.Transports = HttpTransportType.LongPolling)
+                .WithUrl(Configuration["API_URL_SignalR_Negotiation"])
                 .Build();
             
             _messages = new Dictionary<string, List<Message>>();
