@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BlazorChatApp.Services;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using System.Net.Http;
 
 namespace BlazorChatApp
 {
@@ -14,7 +15,7 @@ namespace BlazorChatApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-            builder.Services.AddBaseAddressHttpClient();
+            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddSingleton<ChatService>();
 
             var assembly = Assembly.GetExecutingAssembly();
@@ -26,12 +27,6 @@ namespace BlazorChatApp
                     .Build();
 
             builder.Configuration.AddConfiguration(config);
-
-            builder.Services.AddMsalAuthentication(options =>
-            {
-                options.ProviderOptions.Authentication.Authority = "https://login.microsoftonline.com/common";
-                options.ProviderOptions.Authentication.ClientId = "b6240c79-58b6-4e27-a8d4-719c5a866312";
-            });
 
             await builder.Build().RunAsync();
         }
